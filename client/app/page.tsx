@@ -4,7 +4,7 @@ import Hero from "./components/Hero";
 export default function Home() {
   return (
     <div>
-      <main>
+      <main>khulan
            <Hero />
       <Three />
       </main>
