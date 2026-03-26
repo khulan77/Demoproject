@@ -6,12 +6,29 @@ import Link from "next/link";
 import Image from "next/image";
 
 const avatars = [
-  { id: 1, name: "Зоригт", src: "/1.png", rank: "Шинэ Баатар", minStars: 0 },
-  { id: 2, name: "Ухаант", src: "/2.png", rank: "Суралцагч", minStars: 10 },
-  { id: 7, name: "Сэргэлэн", src: "/7.png", rank: "Овсгоот", minStars: 60 },
-  // ... бусад аватаруудаа энд нэмж болно
-  { id: 20, name: "Ялагдашгүй", src: "/20.png", rank: "Бурхан", minStars: 300 },
+  { id: 1, name: "Зоригт", src: "/1.png", rank: "Шинэ Баатар" },
+  { id: 2, name: "Ухаант", src: "/2.png", rank: "Про Баатар" },
+  { id: 3, name: "Шившлэгт", src: "/3.png", rank: "Мастер" },
+  { id: 4, name: "Баатар", src: "/4.png", rank: "Домогт" },
+  { id: 5, name: "Гайхамшигт", src: "/5.png", rank: "Легенд" },
+  { id: 6, name: "Гэрэлт", src: "/6.png", rank: "Эпик" },
+  { id: 7, name: "Тамир", src: "/7.png", rank: "Раритет" },
+  { id: 8, name: "Сэргэлэн", src: "/8.png", rank: "Найдвартай" },
+  { id: 9, name: "Галзуу", src: "/9.png", rank: "Экстрим" },
+  { id: 10, name: "Гүн ухаант", src: "/10.png", rank: "Мистик" },
+  { id: 11, name: "Гайхамшигт", src: "/11.png", rank: "Гранд" },
+  { id: 12, name: "Тэнгэрийн", src: "/12.png", rank: "Бурхан" },
+  { id: 13, name: "Галзуу", src: "/13.png", rank: "Экстрим" },
+  { id: 14, name: "Гүн ухаант", src: "/14.png", rank: "Мистик" },
+  { id: 15, name: "Гайхамшигт", src: "/15.png", rank: "Гранд" },
+  { id: 16, name: "Тэнгэрийн", src: "/16.png", rank: "Бурхан" },
+  { id: 17, name: "Галзуу", src: "/17.png", rank: "Экстрим" },
+  { id: 18, name: "Гүн ухаант", src: "/18.png", rank: "Мистик" },
+  { id: 19, name: "Гайхамшигт", src: "/19.png", rank: "Гранд" },
+  { id: 20, name: "Тэнгэрийн", src: "/20.png", rank: "Бурхан" },
+  
 ];
+
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
