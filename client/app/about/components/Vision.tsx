@@ -5,11 +5,9 @@ import { Target, Eye, Sparkles, BookOpen, Star, ArrowRight } from "lucide-react"
 
 const Vision = () => {
   return (
-    <section className="w-full py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6 max-w-6xl">
-        
-        {/* 1. БИДНИЙ ЗОРИЛГО */}
-        <div className="flex flex-col lg:flex-row items-center gap-16 mb-40">
+    <section className="w-full py-10 bg-white overflow-hidden">
+      <div className="container mx-auto px-6 max-w-6xl md:py-20">
+        <div className="flex flex-col lg:flex-row items-center gap-16 mb-20 ">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -28,7 +26,7 @@ const Vision = () => {
             </h2>
             
             <p className="text-gray-400 text-base md:text-lg leading-relaxed font-bold max-w-lg">
-              Монгол хэлний цээж бичгийг дижитал шилжилттэй холбож, хүүхэд бүрт эх хэлээрээ <span className="text-[#5D3191]">алдаагүй зөв</span> бичихийг бэлэглэх нь бидний зорилго.
+              Монгол хэлний цээж бичгийг дижитал шилжилттэй холбож, хүүхэд бүрт эх хэлээрээ <span className="text-[#5D3191]">алдаагүй зөв</span> бичихийг сургах нь бидний зорилго.
             </p>
 
             <div className="flex items-center gap-8 pt-4 border-t border-gray-50">
@@ -60,7 +58,6 @@ const Vision = () => {
           </motion.div>
         </div>
 
-        {/* 2. АЛСЫН ХАРАА - ОД БОЛОН НОМЫГ ЗАССАН ХЭСЭГ */}
         <div className="flex flex-col-reverse lg:flex-row items-center gap-16">
           <motion.div 
   initial={{ opacity: 0, scale: 0.95 }}
@@ -75,7 +72,6 @@ const Vision = () => {
       className="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-700" 
       alt="Our Vision"
     />
-    {/* Зургийн дээд хэсэгт зөөлөн сүүдэр (overlay) нэмж одыг илүү тодруулж болно */}
     <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
   </div>
 </motion.div>

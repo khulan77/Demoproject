@@ -1,94 +1,279 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
-import { ChevronRight, Users, Activity, Star } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight, Users, Sparkles, Activity } from "lucide-react";
+import IslandOverlay from "./IslandMap";
 
 const classes = [
-  { id: 1, grade: "1-р анги", desc: "Үсэг болон богино үгсийг алдаагүй бичиж сурна.", students: "1,240", avgPerformance: 85, color: "bg-[#FF6B6B]", lightColor: "bg-[#FFF0F0]", icon: "✏️" },
-  { id: 2, grade: "2-р анги", desc: "Үг холбож, энгийн өгүүлбэр бичиж дадлагажина.", students: "850", avgPerformance: 78, color: "bg-[#4D96FF]", lightColor: "bg-[#F0F6FF]", icon: "📖" },
-  { id: 3, grade: "3-р анги", desc: "Өгүүлбэр зүй болон эх бичвэрийг зөв бичиж сурна.", students: "620", avgPerformance: 92, color: "bg-[#6BCB77]", lightColor: "bg-[#F0FFF4]", icon: "🌟" },
-  { id: 4, grade: "4-р анги", desc: "Найруулан бичих болон цээж бичгийн сорилд бэлдэнэ.", students: "430", avgPerformance: 74, color: "bg-[#FFD93D]", lightColor: "bg-[#FFFBEB]", icon: "🎯" },
-  { id: 5, grade: "5-р анги", desc: "Ахисан түвшний эх бичвэрийг мастер түвшинд бичнэ.", students: "310", avgPerformance: 88, color: "bg-[#9254DE]", lightColor: "bg-[#F9F0FF]", icon: "👑" },
+  {
+    id: 1,
+    grade: "1-р анги",
+    desc: "Үсэг болон богино үгсийг алдаагүй зөв бичиж сурна.",
+    students: "1,240",
+    avgPerformance: 85,
+    color: "#FF6B6B",
+    img: "/1-r aral.png",
+    effects: ["✏️", "📖", "✨", "🔍", "📝", "🌟"],
+  },
+  {
+    id: 2,
+    grade: "2-р анги",
+    desc: "Өгүүлбэр болон холбоо үгсийг зөв бичиж сурна.",
+    students: "850",
+    avgPerformance: 78,
+    color: "#4D96FF",
+    img: "/2-r aral.png",
+    effects: ["🔍", "📝", "🌟", "✏️", "📖", "✨"],
+  },
+  {
+    id: 3,
+    grade: "3-р анги",
+    desc: "",
+    students: "620",
+    avgPerformance: 92,
+    color: "#6BCB77",
+    img: "/3-r aral.png",
+    effects: ["🧠", "📚", "⚡", "✏️", "📖", "✨"],
+  },
+  {
+    id: 4,
+    grade: "4-р анги",
+    desc: "",
+    students: "430",
+    avgPerformance: 74,
+    color: "#FFD93D",
+    img: "/4-r aral.png",
+    effects: ["✍️", "📖", "📝", "🌟", "✏️"],
+  },
+  {
+    id: 5,
+    grade: "5-р анги",
+    desc: "",
+    students: "310",
+    avgPerformance: 88,
+    color: "#9254DE",
+    img: "/5-r aral.png",
+    effects: ["👑", "✍️", "📖", "📝"],
+  },
 ];
 
-const ClassSelectionEnhanced = () => {
+const magicVariants = {
+  initial: { scale: 0, opacity: 0, y: 0 },
+  animate: (i: number) => ({
+    scale: [0, 1.2, 1],
+    opacity: [0, 1, 0],
+    y: -80 - Math.random() * 40,
+    x: (Math.random() - 0.5) * 160,
+    transition: { duration: 2, repeat: Infinity, delay: i * 0.2 },
+  }),
+  exit: { scale: 0, opacity: 0 },
+};
+
+const ClassSelectionFinal = () => {
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) return null;
+  const selectedIslandData = classes.find((c) => c.id === selectedId);
+
   return (
-    <section className="py-12 md:py-20 px-4 md:px-6 bg-[#FAFAFF]">
-      <div className="container mx-auto max-w-4xl">
-        
-        {/* Header - Static & Clean */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-14 gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-6 h-1 bg-[#8DC63F] rounded-full" />
-              <span className="text-[#8DC63F] font-black text-[10px] uppercase tracking-widest">Сурах зам</span>
-            </div>
-            <h2 className="text-[#5D3191] font-black text-3xl md:text-5xl tracking-tighter">Ангиа сонгох</h2>
-          </div>
-          <p className="text-gray-400 font-bold text-[11px] md:text-sm max-w-[280px]">
-             Өөрийн түвшинд тохирсон ангиа сонгож цээж бичгийн баатар болоорой!
-          </p>
-        </div>
-
-        {/* Ангиудын жагсаалт */}
-        <div className="grid gap-4 md:gap-6">
-          {classes.map((item, index) => (
+    <section className="relative py-20 px-6 bg-white overflow-hidden font-sans text-[#5D3191]">
+      <div className="container mx-auto max-w-5xl relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-24 border-b border-purple-50 pb-12">
+          <div className="space-y-4">
             <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className="group relative"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="inline-flex items-center gap-2 bg-[#F8F9FF] px-3 py-1 rounded-full border border-purple-50"
             >
-              {/* КАРТНЫ ҮНДСЭН БИЕ - flex-row-г хэвээр үлдээв (Утас дээр ч хөндлөн) */}
-              <div className="bg-white rounded-[24px] md:rounded-[35px] p-3 md:p-8 shadow-sm border border-white hover:border-purple-100 transition-all flex flex-row items-center gap-3 md:gap-8 overflow-hidden relative">
-                
-                {/* 1. ИКОН - Утас дээр w-14 болгож жижигсгэв */}
-                <div className={`w-14 h-14 md:w-24 md:h-24 shrink-0 ${item.lightColor} rounded-[18px] md:rounded-[32px] flex items-center justify-center text-2xl md:text-5xl shadow-inner`}>
-                  {item.icon}
-                </div>
+              <Sparkles className="w-3.5 h-3.5 text-[#8DC63F]" />
+              <span className="text-[#8DC63F] font-black text-[10px] uppercase tracking-widest">
+                Аялал эхэллээ
+              </span>
+            </motion.div>
+            <h2 className="text-5xl md:text-6xl font-[1000] tracking-tighter uppercase italic leading-none">
+              АНГИА <span className="text-[#8DC63F]">СОНГОХ</span>
+            </h2>
+          </div>
 
-                {/* 2. ТЕКСТ - Утас дээр хэмжээг нь багасгав */}
-                <div className="flex-1 min-w-0">
-                  <div className="mb-1 md:mb-4">
-                    <h3 className="text-[#5D3191] font-black text-sm md:text-2xl tracking-tight leading-none md:mb-1">{item.grade}</h3>
-                    <p className="text-gray-400 font-bold text-[10px] md:text-sm leading-snug line-clamp-1 md:line-clamp-none">
+          <div className="max-w-xs md:text-right">
+            <p className="text-gray-400 font-bold text-sm md:text-base leading-relaxed italic">
+              Өөрийн түвшинд тохирсон ангиа сонгож, цээж бичгийн
+              <span className="text-[#5D3191] border-b-2 border-[#8DC63F]/40 ml-1 font-black">
+                Баатар
+              </span>{" "}
+              болоорой!
+            </p>
+          </div>
+        </div>
+        <div className="relative space-y-24 md:space-y-32">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none hidden md:block">
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 800 1200"
+              fill="none"
+              className="opacity-20"
+            >
+              <path
+                d="M400 50 C 600 150, 200 250, 400 350 S 600 550, 400 650 S 200 850, 400 950 S 600 1150, 400 1250"
+                stroke="#8DC63F"
+                strokeWidth="6"
+                strokeDasharray="12 12"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+
+          {classes.map((item, index) => {
+            const isEven = index % 2 === 0;
+            const isHovered = hoveredId === item.id;
+
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                className={`relative flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-12 md:gap-24 z-20`}
+              >
+                <div className="relative w-full max-w-[220px] md:max-w-[300px] aspect-square group">
+                  <div
+                    className="absolute inset-0 rounded-full blur-[60px] opacity-10 group-hover:opacity-25 transition-opacity duration-700"
+                    style={{ backgroundColor: item.color }}
+                  />
+
+                  <motion.div
+                    onMouseEnter={() => setHoveredId(item.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                    onClick={() => setSelectedId(item.id)} // Арал дээр дарахад Popover нээгдэнэ
+                    whileHover={{
+                      scale: 1.15,
+                      rotate: isEven ? 5 : -5,
+                      y: -20,
+                      transition: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      },
+                    }}
+                    className="relative w-full h-full z-10 cursor-pointer"
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.grade}
+                      className="w-full h-full object-contain animate-float drop-shadow-2xl"
+                    />
+
+                    <AnimatePresence>
+                      {isHovered && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          {item.effects.map((emoji, i) => (
+                            <motion.span
+                              key={i}
+                              custom={i}
+                              variants={magicVariants}
+                              initial="initial"
+                              animate="animate"
+                              exit="exit"
+                              className="absolute text-3xl filter drop-shadow-md"
+                            >
+                              {emoji}
+                            </motion.span>
+                          ))}
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+
+                  <div
+                    className={`absolute -top-2 ${isEven ? "-right-2" : "-left-2"} bg-white p-1.5 rounded-[18px] shadow-xl z-20 border-2 border-gray-50`}
+                  >
+                    <div
+                      className="w-9 h-9 rounded-[14px] flex items-center justify-center text-white font-[1000] text-lg"
+                      style={{ backgroundColor: item.color }}
+                    >
+                      {item.id}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`flex-1 flex flex-col ${isEven ? "items-center md:items-start text-center md:text-left" : "items-center md:items-end text-center md:text-right"} space-y-6`}
+                >
+                  <div className="space-y-2">
+                    <h3 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic">
+                      {item.grade}
+                    </h3>
+                    <p className="text-gray-400 font-bold text-lg max-w-sm leading-snug">
                       {item.desc}
                     </p>
                   </div>
 
-                  {/* СТАТИСТИК - Маш компакт */}
-                  <div className="flex flex-wrap gap-1.5 md:gap-3">
-                    <div className="flex items-center gap-1 bg-gray-50 px-2 py-0.5 rounded-full">
-                      <Users className="w-2.5 h-2.5 text-[#5D3191]/60" />
-                      <span className="text-[8px] md:text-[11px] font-black text-[#5D3191]/60 uppercase">{item.students}</span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl border border-gray-100 shadow-sm">
+                      <Users className="w-4 h-4 text-purple-200" />
+                      <span className="font-black text-xs uppercase tracking-tight text-gray-400">
+                        {item.students} Баатар
+                      </span>
                     </div>
-                    <div className="flex items-center gap-2 bg-green-50 px-2 py-0.5 rounded-full">
-                      <Activity className="w-2.5 h-2.5 text-[#8DC63F]" />
-                      <span className="text-[8px] md:text-[11px] font-black text-[#8DC63F] uppercase">{item.avgPerformance}%</span>
+                    <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl border border-gray-100 shadow-sm">
+                      <Activity className="w-4 h-4 text-[#8DC63F]/50" />
+                      <span className="font-black text-xs uppercase tracking-tight text-gray-400">
+                        {item.avgPerformance}% Амжилт
+                      </span>
                     </div>
                   </div>
-                </div>
 
-                {/* 3. ТОВЧЛУУР - Хөдөлгөөн нь зөвхөн сум дээр */}
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  className={`w-10 h-10 md:w-16 md:h-16 ${item.color} rounded-[12px] md:rounded-full flex items-center justify-center text-white shadow-lg group-hover:translate-x-1 transition-transform shrink-0`}
-                >
-                  <ChevronRight className="w-6 h-6 md:w-10 md:h-10 stroke-[3px]" />
-                </motion.button>
-
-                {/* ОД - Чиний өөрийнхөөр чинь үлдээв */}
-                <div className="absolute top-4 right-16 md:right-20 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 animate-bounce" />
+                  <motion.button
+                    onClick={() => setSelectedId(item.id)}
+                    whileHover={{
+                      scale: 1.05,
+                      backgroundColor: "#8DC63F",
+                      boxShadow: "0px 10px 25px rgba(141, 198, 63, 0.4)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-4 bg-[#5D3191] text-white pl-8 pr-3 py-3 rounded-full font-[1000] text-[11px] uppercase tracking-[0.2em] shadow-xl group transition-all duration-300"
+                  >
+                    Аялалаа эхлэх
+                    <div className="bg-white/20 p-2 rounded-full group-hover:bg-white/40 transition-colors">
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </motion.button>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
+      <AnimatePresence>
+        {selectedId && selectedIslandData && (
+          <IslandOverlay
+            island={selectedIslandData}
+            onClose={() => setSelectedId(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <style jsx>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-15px);
+          }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 };
 
-export default ClassSelectionEnhanced;
+export default ClassSelectionFinal;

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import LevelSelector from "./about/components/LevelSelector";
 import Hero from "./components/Hero";
 import Vision from "./about/components/Vision";
 import ClassSelection from "./about/components/ClassSelection";
@@ -9,7 +8,7 @@ export default function Home() {
     <div>
       <main>
            <Hero />
-            <Solution />
+           <Solution />
            <ClassSelection/>
            <Vision/>
       </main>
